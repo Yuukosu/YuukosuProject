@@ -13,10 +13,12 @@ public class ExampleGui extends YuukosuGui {
 
     public ExampleGui() {
         super(54, "Example");
+        super.setAutoUpdate(true);
     }
 
     @Override
     public void open(InventoryOpenEvent e) {
+        this.update();
     }
 
     @Override
@@ -25,9 +27,9 @@ public class ExampleGui extends YuukosuGui {
                 new ItemCreator(Material.GOLDEN_APPLE)
                         .setDisplayName("§dボタン")
                         .setLore(new String[]{
-                                "§rLore1",
-                                "§rLore2",
-                                "§rLore3"
+                                "§7Lore1",
+                                "§7Lore2",
+                                "§7Lore3"
                         })
                         .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true)
                         .addItemFlags(ItemFlag.values())

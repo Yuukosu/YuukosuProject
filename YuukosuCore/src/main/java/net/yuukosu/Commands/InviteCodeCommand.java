@@ -1,6 +1,6 @@
 package net.yuukosu.Commands;
 
-import net.yuukosu.System.GuiCreator.InviteCodeManager;
+import net.yuukosu.System.InviteCodeManager;
 import net.yuukosu.System.InviteCode;
 import net.yuukosu.System.PlayerRank;
 import net.yuukosu.YuukosuCore;

@@ -1,7 +1,6 @@
 package net.yuukosu.System.GuiCreator;
 
 import lombok.Getter;
-
 import lombok.Setter;
 import net.yuukosu.YuukosuCore;
 import org.bukkit.Bukkit;
@@ -18,16 +17,20 @@ public abstract class YuukosuGui {
     @Getter
     private final Inventory inventory;
     @Getter
-    private final Map<Integer, List<GuiButton>> buttons = new HashMap<>();
+    private final Map<Integer, GuiButton> buttons = new HashMap<>();
     @Getter
     private final Set<Player> delayingPlayers = new HashSet<>();
     @Setter
     @Getter
     private long clickDelay;
+    @Setter
+    @Getter
+    private boolean autoUpdate;
 
     public YuukosuGui(int size, String title) {
         this.inventory = Bukkit.createInventory(null, size, title);
         this.clickDelay = 10;
+        this.autoUpdate = true;
     }
 
     public void setItem(ItemStack item, int slot) {
@@ -35,12 +38,11 @@ public abstract class YuukosuGui {
     }
 
     public void createButton(int slot, GuiButton guiButton) {
-        if (this.buttons.containsKey(slot)) {
-            this.buttons.get(slot).add(guiButton);
-            return;
-        }
+        this.buttons.put(slot, guiButton);
+    }
 
-        this.buttons.put(slot, new ArrayList<GuiButton>(){{this.add(guiButton);}});
+    public void removeButton(int slot) {
+        this.buttons.remove(slot);
     }
 
     public void clearInventory() {
@@ -54,7 +56,7 @@ public abstract class YuukosuGui {
     }
 
     public void startDelay(Player player) {
-        if (!this.isDelaying(player)) {
+        if (!this.isDelaying(player) && this.clickDelay > 0) {
             this.delayingPlayers.add(player);
             Bukkit.getScheduler().runTaskLater(YuukosuCore.getInstance(), () -> this.delayingPlayers.remove(player), this.clickDelay);
         }

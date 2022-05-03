@@ -2,7 +2,6 @@ package net.yuukosu.System;
 
 import lombok.Getter;
 import net.yuukosu.System.CustomItem.CustomItem;
-import net.yuukosu.System.GuiCreator.InviteCodeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;

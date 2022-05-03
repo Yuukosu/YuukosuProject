@@ -120,7 +120,6 @@ public class GameManager {
             if (Bukkit.getOnlinePlayers().isEmpty()) {
                 Bukkit.shutdown();
             }
-
         }
     }
 

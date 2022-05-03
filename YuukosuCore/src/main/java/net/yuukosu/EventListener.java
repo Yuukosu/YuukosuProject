@@ -71,9 +71,14 @@ public class EventListener implements Listener {
 
         if (YuukosuCore.getCoreManager().contains(player)) {
             CorePlayer corePlayer = YuukosuCore.getCoreManager().getCorePlayer(player);
+            YuukosuGui gui = corePlayer.getCurrentGui();
 
-            if (corePlayer.getCurrentGui() != null) {
-                corePlayer.getCurrentGui().open(e);
+            if (gui != null) {
+                if (gui.isAutoUpdate()) {
+                    gui.update();
+                }
+
+                gui.open(e);
             }
         }
     }
@@ -93,12 +98,14 @@ public class EventListener implements Listener {
                     return;
                 }
 
-                if (gui.getClickDelay() > 0) {
-                    gui.startDelay(player);
-                }
+                gui.startDelay(player);
 
                 if (gui.getButtons().containsKey(e.getSlot())) {
-                    gui.getButtons().get(e.getSlot()).forEach(guiButton -> guiButton.click(e));
+                    gui.getButtons().get(e.getSlot()).click(e);
+
+                    if (gui.isAutoUpdate()) {
+                        gui.update();
+                    }
                 }
             }
         }

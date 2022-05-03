@@ -1,9 +1,8 @@
-package net.yuukosu.System.GuiCreator;
+package net.yuukosu.System;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
-import net.yuukosu.System.InviteCode;
 import net.yuukosu.Utils.DatabaseUtils;
 import net.yuukosu.YuukosuCore;
 import org.bson.Document;
