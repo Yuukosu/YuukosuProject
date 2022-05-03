@@ -20,13 +20,23 @@ public class InviteCodeManager {
 
     public InviteCode generateCode() {
         InviteCode inviteCode = new InviteCode();
+
+        while (this.containsCode(inviteCode)) {
+            inviteCode = new InviteCode();
+        }
+
         this.inviteCodes.add(inviteCode);
         this.save();
 
         return inviteCode;
     }
 
+    public void removeInviteCode(int index) {
+        this.inviteCodes.remove(index);
+    }
+
     public InviteCode getInviteCode(String code) {
+        this.load();
         return this.inviteCodes.stream().filter(inviteCode -> inviteCode.getCode().equals(code)).findFirst().orElse(null);
     }
 
@@ -47,11 +57,22 @@ public class InviteCodeManager {
         if (doc != null) {
             @SuppressWarnings("unchecked")
             List<Document> list = (List<Document>) doc.get("INVITE_CODES");
-            list.forEach(document -> this.inviteCodes.add(InviteCode.toInviteCode(document)));
+            list.forEach(document -> {
+                InviteCode inviteCode = InviteCode.toInviteCode(document);
+
+                if (this.inviteCodes.stream().noneMatch(inviteCode::equals)) {
+                    this.inviteCodes.add(inviteCode);
+                }
+            });
         }
     }
 
-    public boolean checkCode(String code) {
-        return this.inviteCodes.stream().anyMatch(inviteCode -> inviteCode.getCode().equals(code));
+    public boolean containsCode(InviteCode inviteCode) {
+        return this.inviteCodes.stream().anyMatch(inviteCode1 -> inviteCode.getCode().equals(inviteCode1.getCode()));
+    }
+
+    public boolean checkInviteCode(InviteCode inviteCode) {
+        this.load();
+        return inviteCode != null && this.inviteCodes.stream().anyMatch(inviteCode1 -> inviteCode.getCode().equals(inviteCode1.getCode()) && inviteCode.getTime() == inviteCode1.getTime());
     }
 }

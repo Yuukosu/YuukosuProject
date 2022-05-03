@@ -161,8 +161,10 @@ public class CorePlayer {
     }
 
     public boolean receiveInviteCode(String code) {
-        if (YuukosuCore.getCoreManager().getInviteCodeManager().checkCode(code)) {
-            this.acceptInviteCode(YuukosuCore.getCoreManager().getInviteCodeManager().getInviteCode(code));
+        InviteCode inviteCode = YuukosuCore.getCoreManager().getInviteCodeManager().getInviteCode(code);
+
+        if (YuukosuCore.getCoreManager().getInviteCodeManager().checkInviteCode(inviteCode)) {
+            this.acceptInviteCode(inviteCode);
             return true;
         }
 
@@ -187,7 +189,7 @@ public class CorePlayer {
     }
 
     public boolean hasActiveInviteCode() {
-        return this.inviteCode != null && YuukosuCore.getCoreManager().getInviteCodeManager().checkCode(this.inviteCode.getCode());
+        return this.inviteCode != null && YuukosuCore.getCoreManager().getInviteCodeManager().checkInviteCode(this.inviteCode);
     }
 
     public boolean hasData() {

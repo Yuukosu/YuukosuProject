@@ -74,6 +74,11 @@ public class EventListener implements Listener {
             YuukosuGui gui = corePlayer.getCurrentGui();
 
             if (gui != null) {
+                if (gui.isAutoClear()) {
+                    gui.clearInventory();
+                    gui.clearButtons();
+                }
+
                 if (gui.isAutoUpdate()) {
                     gui.update();
                 }
@@ -103,13 +108,13 @@ public class EventListener implements Listener {
                 if (gui.getButtons().containsKey(e.getSlot())) {
                     gui.getButtons().get(e.getSlot()).click(e);
 
-                    if (gui.isAutoUpdate()) {
-                        gui.update();
-                    }
-
                     if (gui.isAutoClear()) {
                         gui.clearInventory();
                         gui.clearButtons();
+                    }
+
+                    if (gui.isAutoUpdate()) {
+                        gui.update();
                     }
                 }
             }

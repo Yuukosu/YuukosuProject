@@ -40,7 +40,7 @@ public class InviteCodeCommand extends YuukosuCommand {
                     }
 
                     if (index < manager.getInviteCodes().size()) {
-                        manager.getInviteCodes().remove(index);
+                        manager.removeInviteCode(index);
                         manager.save();
                         sender.sendMessage("§a消去しました。");
                         return;
@@ -53,6 +53,8 @@ public class InviteCodeCommand extends YuukosuCommand {
                 sender.sendMessage("§cUsage: /invitecode remove (Number)");
                 return;
             } else if (args[0].equalsIgnoreCase("list")) {
+                manager.load();
+
                 if (manager.getInviteCodes().isEmpty()) {
                     sender.sendMessage("§c招待コードはまだ生成されていません。");
                     return;
@@ -70,10 +72,10 @@ public class InviteCodeCommand extends YuukosuCommand {
             }
         }
 
-        sender.sendMessage("§c---Invite Code---");
+        sender.sendMessage("§c-----InviteCode-----");
         sender.sendMessage("§c/invitecode generate");
         sender.sendMessage("§c/invitecode remove (Index)");
         sender.sendMessage("§c/invitecode list");
-        sender.sendMessage("§c----------------");
+        sender.sendMessage("§c------------------");
     }
 }

@@ -43,4 +43,8 @@ public class InviteCode {
     public static InviteCode toInviteCode(Document document) {
         return new InviteCode(document);
     }
+
+    public boolean equals(InviteCode inviteCode) {
+        return inviteCode != null && this.code.equals(inviteCode.getCode()) && this.time == inviteCode.getTime();
+    }
 }
