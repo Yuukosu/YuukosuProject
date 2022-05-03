@@ -70,7 +70,7 @@ public class InviteCodeCommand extends YuukosuCommand {
             }
         }
 
-        sender.sendMessage("§c---InviteCode---");
+        sender.sendMessage("§c---Invite Code---");
         sender.sendMessage("§c/invitecode generate");
         sender.sendMessage("§c/invitecode remove (Index)");
         sender.sendMessage("§c/invitecode list");

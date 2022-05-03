@@ -106,6 +106,11 @@ public class EventListener implements Listener {
                     if (gui.isAutoUpdate()) {
                         gui.update();
                     }
+
+                    if (gui.isAutoClear()) {
+                        gui.clearInventory();
+                        gui.clearButtons();
+                    }
                 }
             }
         }

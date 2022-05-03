@@ -26,11 +26,15 @@ public abstract class YuukosuGui {
     @Setter
     @Getter
     private boolean autoUpdate;
+    @Setter
+    @Getter
+    private boolean autoClear;
 
     public YuukosuGui(int size, String title) {
         this.inventory = Bukkit.createInventory(null, size, title);
         this.clickDelay = 10;
         this.autoUpdate = true;
+        this.autoClear = true;
     }
 
     public void setItem(ItemStack item, int slot) {

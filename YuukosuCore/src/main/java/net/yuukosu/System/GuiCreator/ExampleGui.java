@@ -11,14 +11,18 @@ import org.bukkit.inventory.ItemFlag;
 
 public class ExampleGui extends YuukosuGui {
 
+    private final ExampleButton exampleButton;
+
     public ExampleGui() {
         super(54, "Example");
         super.setAutoUpdate(true);
+        super.setAutoClear(true);
+
+        this.exampleButton = new ExampleButton();
     }
 
     @Override
     public void open(InventoryOpenEvent e) {
-        this.update();
     }
 
     @Override
@@ -34,9 +38,9 @@ public class ExampleGui extends YuukosuGui {
                         .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true)
                         .addItemFlags(ItemFlag.values())
                         .create()
-                , 22
+                ,22
         );
-        this.createButton(22, new ExampleButton());
+        this.createButton(22, this.exampleButton);
     }
 
     @Override
