@@ -1,0 +1,7 @@
+name: YuukosuHub
+main: net.yuukosu.YuukosuHub
+version: 1.0
+depend:
+  - YuukosuCore
+softdepend:
+  - YuukosuCore
