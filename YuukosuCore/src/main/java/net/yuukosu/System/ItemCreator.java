@@ -53,6 +53,7 @@ public class ItemCreator {
         return this;
     }
 
+    @SuppressWarnings("deprecation")
     public ItemCreator setData(byte data) {
         this.materialData.setData(data);
 

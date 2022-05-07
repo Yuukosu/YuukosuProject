@@ -22,6 +22,7 @@ public class CoreDatabase {
         this.database = this.client.getDatabase(database);
     }
 
+    @SuppressWarnings("deprecation")
     public CoreDatabase(String host, int port, String database, String user, char[] password) {
         MongoCredential credential = MongoCredential.createScramSha1Credential(user, database, password);
         this.client = new MongoClient(new ServerAddress(host, port), Collections.singletonList(credential));
