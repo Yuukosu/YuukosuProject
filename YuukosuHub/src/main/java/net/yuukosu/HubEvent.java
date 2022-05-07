@@ -1,4 +1,5 @@
 package net.yuukosu;
+
 import net.yuukosu.System.CorePlayer;
 import net.yuukosu.System.HubPlayer;
 import net.yuukosu.System.PlayerRank;
@@ -55,9 +56,9 @@ public class HubEvent implements Listener {
             if (e.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
                 return;
             }
-        }
 
-        e.setCancelled(true);
+            e.setCancelled(true);
+        }
     }
 
     @EventHandler

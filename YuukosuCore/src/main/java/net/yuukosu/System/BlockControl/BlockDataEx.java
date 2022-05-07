@@ -2,6 +2,7 @@ package net.yuukosu.System.BlockControl;
 
 import lombok.Getter;
 import net.yuukosu.Utils.DatabaseUtils;
+import net.yuukosu.YuukosuCore;
 import org.bson.Document;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,19 +28,22 @@ public class BlockDataEx extends BlockData {
     }
 
     public void placeBlock() {
-        Block block = this.location.getBlock();
-        block.setType(this.getMaterial());
-        block.setData(this.getData());
-        block.getState().update();
+        super.place(this.location);
     }
 
     public void breakBlock(boolean animation) {
+        Block block = this.location.getBlock();
+
+        if (block.hasMetadata("CLICKABLE_BLOCK")) {
+            block.removeMetadata("CLICKABLE_BLOCK", YuukosuCore.getInstance());
+        }
+
         if (animation) {
-            this.location.getBlock().breakNaturally();
+            block.breakNaturally();
             return;
         }
 
-        this.location.getBlock().setType(Material.AIR);
+        block.setType(Material.AIR);
     }
 
     @Override

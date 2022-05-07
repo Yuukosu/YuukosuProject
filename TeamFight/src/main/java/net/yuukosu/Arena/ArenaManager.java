@@ -28,7 +28,7 @@ public class ArenaManager {
     @Getter
     private Location lobby;
     @Getter
-    private final List<BlockDataEx> chestData = new ArrayList<>();
+    private final List<Location> chestLocations = new ArrayList<>();
     @Getter
     private final Map<EnumTeam, ArenaTeamData> arenaTeamData = new HashMap<>();
 
@@ -58,7 +58,7 @@ public class ArenaManager {
                 if (doc.containsKey("CHESTS_DATA")) {
                     @SuppressWarnings("unchecked")
                     List<Document> list = (List<Document>) doc.get("CHESTS_DATA");
-                    list.forEach(document -> this.chestData.add(BlockDataEx.toBlockDataEx(document)));
+                    list.forEach(document -> this.chestLocations.add(DatabaseUtils.toLocation(document)));
                 }
 
                 if (doc.containsKey("TEAM_DATA")) {
@@ -110,7 +110,7 @@ public class ArenaManager {
         }
 
         List<Document> chestsDataDocs = new ArrayList<>();
-        this.chestData.forEach(chestsData -> chestsDataDocs.add(chestsData.toDocument()));
+        this.chestLocations.forEach(chestsData -> chestsDataDocs.add(DatabaseUtils.toDocument(chestsData)));
 
         doc.put("CHESTS_DATA", chestsDataDocs);
 
@@ -148,8 +148,16 @@ public class ArenaManager {
         return this.arenaTeamData.get(enumTeam);
     }
 
-    public boolean containsChestData(BlockDataEx blockDataEx) {
-        return this.chestData.stream().anyMatch(chestData -> chestData.equals(blockDataEx));
+    public void addChestLocation(Location location) {
+        this.chestLocations.add(location);
+    }
+
+    public void removeChestLocation(Location location) {
+        this.chestLocations.remove(location);
+    }
+
+    public boolean containsChestLocation(Location location) {
+        return this.chestLocations.contains(location);
     }
 
     public boolean isRegistered(EnumTeam gameTeam) {

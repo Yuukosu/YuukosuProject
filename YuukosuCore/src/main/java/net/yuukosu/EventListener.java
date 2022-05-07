@@ -1,16 +1,25 @@
 package net.yuukosu;
 
+import net.yuukosu.System.BlockControl.BlockDataEx;
+import net.yuukosu.System.BlockControl.ClickBlocks.ChestExample;
+import net.yuukosu.System.BlockControl.ClickableBlock;
+import net.yuukosu.System.BlockControl.ClickBlocks.ExampleClickableBlock;
 import net.yuukosu.System.CorePlayer;
-import net.yuukosu.System.CustomItem.CustomItem;
-import net.yuukosu.System.CustomItem.ItemNBT;
+import net.yuukosu.System.CustomItem.*;
 import net.yuukosu.System.GuiCreator.YuukosuGui;
 import net.yuukosu.System.PacketHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -18,6 +27,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
+
+import java.util.List;
 
 public class EventListener implements Listener {
 
@@ -124,7 +136,20 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
+        Block block = e.getClickedBlock();
         ItemStack itemStack = e.getItem();
+
+        if (block != null) {
+            if (block.hasMetadata("CLICKABLE_BLOCK")) {
+                List<MetadataValue> valueList = block.getMetadata("CLICKABLE_BLOCK");
+
+                for (MetadataValue value : valueList) {
+                    if (value.value() instanceof ClickableBlock) {
+                        ((ClickableBlock) value.value()).click(e);
+                    }
+                }
+            }
+        }
 
         if (itemStack != null) {
             ItemNBT itemNBT = new ItemNBT(itemStack);
@@ -133,17 +158,40 @@ public class EventListener implements Listener {
                 CustomItem customItem = YuukosuCore.getCoreManager().getCustomItem(itemNBT.getString("CUSTOM_ITEM"));
 
                 if (customItem != null) {
-                    customItem.getItemClickActions().forEach(itemClickAction -> {
+                    ItemAction itemAction = customItem.getItemAction();
+
+                    if (itemAction instanceof ItemClickAction) {
+                        ItemClickAction itemClickAction = (ItemClickAction) itemAction;
+
                         if (itemClickAction.isDelaying(player)) {
                             return;
                         }
 
-                        if (itemClickAction.getDelay() > 0) {
-                            itemClickAction.startDelay(player);
-                        }
+                        itemClickAction.startDelay(player);
+                        itemClickAction.onClick(e);
+                    }
+                }
+            }
 
-                        itemClickAction.click(e);
-                    });
+            if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (itemStack.getType() == Material.BLAZE_ROD) {
+                    if (block != null) {
+                        e.setCancelled(true);
+
+                        BlockDataEx b = new ExampleClickableBlock(block.getLocation());
+                        b.placeBlock();
+                    }
+                }
+
+                if (itemStack.getType() == Material.BONE) {
+                    if (block != null) {
+                        e.setCancelled(true);
+
+                        BlockDataEx b = new ChestExample(block.getLocation());
+                        b.placeBlock();
+                        player.sendMessage("§aCreated!");
+                        player.playSound(player.getLocation(), Sound.ZOMBIE_METAL, 3F, 0F);
+                    }
                 }
             }
         }
@@ -161,6 +209,36 @@ public class EventListener implements Listener {
             }
 
             corePlayer.setCurrentGui(null);
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent e) {
+        Block block = e.getBlock();
+
+        if (block.hasMetadata("CLICKABLE_BLOCK")) {
+            block.removeMetadata("CLICKABLE_BLOCK", YuukosuCore.getInstance());
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        ItemStack itemStack = e.getItemInHand();
+
+        if (itemStack != null) {
+            ItemNBT itemNBT = new ItemNBT(itemStack);
+
+            if (itemNBT.hasTag("CUSTOM_ITEM")) {
+                CustomItem customItem = YuukosuCore.getCoreManager().getCustomItem(itemNBT.getString("CUSTOM_ITEM"));
+
+                if (customItem != null) {
+                    ItemAction itemAction = customItem.getItemAction();
+
+                    if (itemAction instanceof ItemPlaceAction) {
+                        ((ItemPlaceAction) itemAction).onPlace(e);
+                    }
+                }
+            }
         }
     }
 }

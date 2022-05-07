@@ -11,7 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -54,10 +54,8 @@ public class YuukosuCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.kickPlayer("§cMaybee server stopped...");
-        }
-
+        Bukkit.getWorlds().forEach(world -> world.getEntities().forEach(Entity::remove));
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("§cMaybee server stopped..."));
         Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
     }
 
@@ -74,7 +72,8 @@ public class YuukosuCore extends JavaPlugin {
                 new StatusCommand(),
                 new DamageCommand(),
                 new ExampleCommand(),
-                new StrikeCommand()
+                new StrikeCommand(),
+                new DeauthCommand()
         );
     }
 

@@ -3,6 +3,7 @@ package net.yuukosu;
 import com.mongodb.client.MongoCollection;
 import lombok.Getter;
 import net.yuukosu.Arena.ArenaManager;
+import net.yuukosu.Arena.CustomItem.ChestTool;
 import net.yuukosu.Commands.GameDebugCommand;
 import net.yuukosu.Commands.StartCommand;
 import net.yuukosu.Commands.TeamFightCommand;
@@ -46,6 +47,7 @@ public class TeamFight extends JavaPlugin {
 
     private void init() {
         YuukosuCore.getCoreManager().registerCustomItem(new ClassSelectorItem(TeamFight.getGameManager()));
+        YuukosuCore.getCoreManager().registerCustomItem(new ChestTool(TeamFight.getArenaManager()));
 
         Bukkit.getPluginManager().registerEvents(new GameEvent(TeamFight.gameManager), this);
         YuukosuCore.registerCommands(

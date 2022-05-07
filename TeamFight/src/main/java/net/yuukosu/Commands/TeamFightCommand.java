@@ -1,9 +1,12 @@
 package net.yuukosu.Commands;
 
 import net.yuukosu.Arena.ArenaManager;
+import net.yuukosu.Arena.CustomItem.ChestTool;
 import net.yuukosu.Game.EnumTeam;
+import net.yuukosu.System.CustomItem.CustomItem;
 import net.yuukosu.System.PlayerRank;
 import net.yuukosu.TeamFight;
+import net.yuukosu.YuukosuCore;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -55,6 +58,20 @@ public class TeamFightCommand extends YuukosuCommand {
                 arenaManager.setLobby(location);
                 arenaManager.save();
                 sender.sendMessage("§aロビーを設定しました。");
+                return;
+            }
+
+            if (args[0].equalsIgnoreCase("chest")) {
+                CustomItem item = new ChestTool(TeamFight.getArenaManager());
+                player.getInventory().addItem(item.create());
+                sender.sendMessage("§aGET!");
+                return;
+            }
+
+            if (args[0].equalsIgnoreCase("clearChests")) {
+                arenaManager.getChestLocations().clear();
+                arenaManager.save();
+                player.sendMessage("§aREMOVED!");
                 return;
             }
 
@@ -239,6 +256,7 @@ public class TeamFightCommand extends YuukosuCommand {
         sender.sendMessage("§c - /teamfight setname (Name)");
         sender.sendMessage("§c - /teamfight setmapname (Name)");
         sender.sendMessage("§c - /teamfight setlobby");
+        player.sendMessage("§c - /teamfight chest");
         sender.sendMessage("§c - /teamfight registerteam (RED / BLUE / GREEN / YELLOW)");
         sender.sendMessage("§c - /teamfight unregisterteam (RED / BLUE / GREEN / YELLOW)");
         sender.sendMessage("§c - /teamfight setcenter (RED / BLUE / GREEN / YELLOW)");

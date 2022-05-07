@@ -22,7 +22,7 @@ public class ClassSelectorItem extends CustomItem {
                 .setLore(new String[]{
                         "§7クラス選択メニューを開きます。"
                 }).create());
-        super.addClickAction(new OpenClassSelector(gameManager));
+        super.setItemAction(new OpenClassSelector(gameManager));
     }
 
     private static class OpenClassSelector extends ItemClickAction {
@@ -36,7 +36,7 @@ public class ClassSelectorItem extends CustomItem {
         }
 
         @Override
-        public void click(PlayerInteractEvent e) {
+        public void onClick(PlayerInteractEvent e) {
             e.setCancelled(true);
             Player player = e.getPlayer();
 

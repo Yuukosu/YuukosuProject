@@ -48,7 +48,7 @@ public class Hologram {
         for (int i = 0; i < this.armorStands.size(); i++) {
             EntityArmorStand armorStand = this.armorStands.get(i);
             armorStand.setPosition(this.location.getX(), this.location.getY() + (this.space * i), this.location.getZ());
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntity(armorStand, player.getEntityId()));
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(armorStand));
         }
     }
 

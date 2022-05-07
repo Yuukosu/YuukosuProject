@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.yuukosu.Arena.ArenaManager;
 import net.yuukosu.Game.CustomItem.ClassSelectorItem;
+import net.yuukosu.Game.LuckyChest.LuckyChestManager;
 import net.yuukosu.System.BlockControl.MultiBlock;
 import net.yuukosu.System.CorePlayer;
 import net.yuukosu.System.ItemCreator;
@@ -23,6 +24,8 @@ public class GameManager {
 
     @Getter
     private final ArenaManager arenaManager;
+    @Getter
+    private final LuckyChestManager luckyChestManager;
     @Getter
     private final Set<GamePlayer> players = new HashSet<>();
     @Getter
@@ -46,6 +49,7 @@ public class GameManager {
 
     public GameManager(ArenaManager arenaManager) {
         this.arenaManager = arenaManager;
+        this.luckyChestManager = new LuckyChestManager(this.arenaManager, this);
         this.gamePhase = GamePhase.WAITING;
         this.countTime = -1;
         this.countDown = false;
@@ -258,6 +262,9 @@ public class GameManager {
         this.gamePhase = GamePhase.STARTED;
         this.startGameTimer(this.gameTime2);
         this.destroyLobby(10);
+        this.luckyChestManager.init();
+        this.luckyChestManager.destroyAllChests();
+        this.luckyChestManager.spawnRandomChests(3);
         this.shakeTeam();
         this.giveItem();
         this.teleportTeam();

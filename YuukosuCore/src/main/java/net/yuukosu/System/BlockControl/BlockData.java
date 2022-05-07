@@ -2,10 +2,13 @@ package net.yuukosu.System.BlockControl;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.yuukosu.YuukosuCore;
 import org.bson.Document;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 public class BlockData {
 
@@ -26,17 +29,23 @@ public class BlockData {
         this.data = data;
     }
 
+    @SuppressWarnings("deprecation")
     public BlockData(Block block) {
         this.material = block.getType();
         this.data = block.getData();
     }
 
+    @SuppressWarnings("deprecation")
     public void place(Location location) {
         Block block = location.getBlock();
         block.setType(this.material);
         block.setData(this.data);
-
         block.getState().update();
+
+        if (this instanceof ClickableBlock) {
+            MetadataValue value = new FixedMetadataValue(YuukosuCore.getInstance(), this);
+            block.setMetadata("CLICKABLE_BLOCK", value);
+        }
     }
 
     public Document toDocument() {
