@@ -6,7 +6,6 @@ import net.yuukosu.Game.EnumTeam;
 import net.yuukosu.System.CustomItem.CustomItem;
 import net.yuukosu.System.PlayerRank;
 import net.yuukosu.TeamFight;
-import net.yuukosu.YuukosuCore;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
