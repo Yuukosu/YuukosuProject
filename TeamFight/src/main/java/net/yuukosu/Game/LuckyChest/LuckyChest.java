@@ -32,6 +32,17 @@ public class LuckyChest extends BlockDataEx implements ClickableBlock {
     @Getter
     private boolean opened;
 
+    @SuppressWarnings("deprecation")
+    public LuckyChest(GameManager gameManager, Location location) {
+        super(location, new BlockData(Material.CHEST, location.getBlock().getData()));
+        this.gameManager = gameManager;
+        this.hologram = new Hologram(location, 0.3F);
+        this.hologram.addMessage("§e§lCLICK TO OPEN");
+        this.hologram.addMessage("§bLucky Chest");
+        this.displayItem = new EntityItem(((CraftWorld) location.getWorld()).getHandle());
+    }
+
+
     public LuckyChest(GameManager gameManager, Location location, byte data) {
         super(location, new BlockData(Material.CHEST, data));
         this.gameManager = gameManager;
@@ -47,25 +58,40 @@ public class LuckyChest extends BlockDataEx implements ClickableBlock {
             this.opened = false;
             this.placeBlock();
             this.hologram.spawnAll();
+        } else if (this.opened) {
+            this.close();
         }
     }
 
     public void open(ItemStack displayItem) {
-        if (!this.spawned && !this.opened) {
+        if (this.spawned && !this.opened) {
             this.opened = true;
-            this.hologram.destroyAll();
-            this.displayItem.setItemStack(CraftItemStack.asNMSCopy(displayItem));
-            this.displayItem.setCustomName(displayItem.getItemMeta().hasDisplayName() ? displayItem.getItemMeta().getDisplayName() : "");
-            this.displayItem.setCustomNameVisible(true);
 
             Location loc = this.getLocation();
-            BlockPosition position = new BlockPosition(loc.getBlockX() + 0.5D, loc.getBlockY() + 1.0D, loc.getBlockZ() + 0.5D);
-            PacketPlayOutBlockAction packet1 = new PacketPlayOutBlockAction(position, Block.getByName("chest"), 1, 1);
-            PacketPlayOutSpawnEntity packet2 = new PacketPlayOutSpawnEntity(this.displayItem, 2);
-            PacketPlayOutEntityMetadata packet3 = new PacketPlayOutEntityMetadata(this.displayItem.getId(), this.displayItem.getDataWatcher(), true);
-            PacketPlayOutEntityVelocity packet4 = new PacketPlayOutEntityVelocity(this.displayItem.getId(), 0.0D, 0.3D, 0.0D);
-            this.gameManager.getPlayers().forEach(gamePlayer -> gamePlayer.getCorePlayer().sendPackets(packet1, packet2, packet3, packet4));
             loc.getWorld().playSound(loc, Sound.CHEST_OPEN, 3, 2);
+
+            BlockPosition position = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(position, Block.getByName("chest"), 1, 1);
+
+            this.gameManager.getPlayers().forEach(gamePlayer -> gamePlayer.getCorePlayer().sendPackets(packet));
+            this.spawnDisplayItem(displayItem, new Location(loc.getWorld(), loc.getX() + 0.5D, loc.getY() + 1.0D, loc.getZ() + 0.5D));
+            this.hologram.destroyAll();
+        }
+    }
+
+    public void close() {
+        if (this.spawned && this.opened) {
+            this.opened = false;
+
+            Location loc = this.getLocation();
+            loc.getWorld().playSound(loc, Sound.CHEST_CLOSE, 3, 0);
+
+            BlockPosition position = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(position, Block.getByName("chest"), 1, 0);
+
+            this.gameManager.getPlayers().forEach(gamePlayer -> gamePlayer.getCorePlayer().sendPackets(packet));
+            this.destroyDisplayItem();
+            this.hologram.spawnAll();
         }
     }
 
@@ -73,14 +99,33 @@ public class LuckyChest extends BlockDataEx implements ClickableBlock {
         this.spawned = false;
         this.opened = false;
         this.breakBlock(false);
+        this.destroyDisplayItem();
         this.hologram.destroyAll();
     }
 
+    private void spawnDisplayItem(ItemStack itemStack, Location location) {
+        this.displayItem.setItemStack(CraftItemStack.asNMSCopy(itemStack));
+        this.displayItem.setPosition(location.getX(), location.getY(), location.getZ());
+        this.displayItem.setCustomName(itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : null);
+        this.displayItem.setCustomNameVisible(true);
+
+        PacketPlayOutSpawnEntity packet1 = new PacketPlayOutSpawnEntity(this.displayItem, 2);
+        PacketPlayOutEntityMetadata packet2 = new PacketPlayOutEntityMetadata(this.displayItem.getId(), this.displayItem.getDataWatcher(), true);
+        PacketPlayOutEntityVelocity packet3 = new PacketPlayOutEntityVelocity(this.displayItem.getId(), 0, 0, 0);
+
+        this.gameManager.getPlayers().forEach(gamePlayer -> gamePlayer.getCorePlayer().sendPackets(packet1, packet2, packet3));
+    }
+
+    private void destroyDisplayItem() {
+        this.gameManager.getPlayers().forEach(gamePlayer -> gamePlayer.getCorePlayer().sendPackets(new PacketPlayOutEntityDestroy(this.displayItem.getId())));
+    }
+
     @Override
-    public void click(PlayerInteractEvent e) {
+    public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         this.open(new ItemCreator(Material.GOLDEN_APPLE).setDisplayName("§6ゴールデンアップル").create());
-        player.sendMessage("§aOpened LuckyChest!");
+        Bukkit.getScheduler().runTaskLater(TeamFight.getInstance(), this::destroy, 20L * 5L);
+        player.sendMessage("§aラッキーチェストを開けた！");
         player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3, 1.0F);
         Bukkit.getScheduler().runTaskLater(TeamFight.getInstance(), () -> player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3, 1.5F), 5L);
     }

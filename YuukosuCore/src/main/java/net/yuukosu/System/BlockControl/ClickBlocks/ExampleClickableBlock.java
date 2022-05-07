@@ -17,7 +17,7 @@ public class ExampleClickableBlock extends BlockDataEx implements ClickableBlock
     }
 
     @Override
-    public void click(PlayerInteractEvent e) {
+    public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         player.sendMessage("§aDONE!");
         player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3F, 1F);

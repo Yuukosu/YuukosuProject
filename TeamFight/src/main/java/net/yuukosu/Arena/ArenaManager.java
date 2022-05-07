@@ -5,7 +5,6 @@ import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.Setter;
 import net.yuukosu.Game.EnumTeam;
-import net.yuukosu.System.BlockControl.BlockDataEx;
 import net.yuukosu.TeamFight;
 import net.yuukosu.Utils.DatabaseUtils;
 import org.bson.Document;
@@ -39,6 +38,7 @@ public class ArenaManager {
         this.arenaTeamData.put(EnumTeam.BLUE, new ArenaTeamData());
     }
 
+    @SuppressWarnings("unchecked")
     public void load() {
         MongoCollection<Document> collection = TeamFight.getTeamFightArenaCollection();
         Document baseDoc = collection.find(Filters.eq(this.name)).first();
@@ -56,9 +56,7 @@ public class ArenaManager {
                 }
 
                 if (doc.containsKey("CHESTS_DATA")) {
-                    @SuppressWarnings("unchecked")
-                    List<Document> list = (List<Document>) doc.get("CHESTS_DATA");
-                    list.forEach(document -> this.chestLocations.add(DatabaseUtils.toLocation(document)));
+                    ((List<Document>) doc.get("CHESTS_DATA")).forEach(document -> this.chestLocations.add(DatabaseUtils.toLocation(document)));
                 }
 
                 if (doc.containsKey("TEAM_DATA")) {
@@ -77,7 +75,6 @@ public class ArenaManager {
                             }
 
                             if (teamDoc.containsKey("SPAWNS")) {
-                                @SuppressWarnings("unchecked")
                                 List<Document> spawns = (List<Document>) teamDoc.get("SPAWNS");
 
                                 spawns.forEach(document -> this.arenaTeamData.get(enumTeam).addSpawn(DatabaseUtils.toLocation(document)));

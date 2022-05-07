@@ -145,7 +145,7 @@ public class EventListener implements Listener {
 
                 for (MetadataValue value : valueList) {
                     if (value.value() instanceof ClickableBlock) {
-                        ((ClickableBlock) value.value()).click(e);
+                        ((ClickableBlock) value.value()).onClick(e);
                     }
                 }
             }

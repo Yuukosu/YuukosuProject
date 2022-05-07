@@ -26,7 +26,7 @@ public class ChestExample extends BlockDataEx implements ClickableBlock {
     }
 
     @Override
-    public void click(PlayerInteractEvent e) {
+    public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         Block block = e.getClickedBlock();
 

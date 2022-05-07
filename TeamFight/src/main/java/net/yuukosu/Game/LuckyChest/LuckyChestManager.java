@@ -24,9 +24,8 @@ public class LuckyChestManager {
         this.gameManager = gameManager;
     }
 
-    @SuppressWarnings("deprecation")
     public void init() {
-        this.arenaManager.getChestLocations().forEach(location -> this.luckyChests.add(new LuckyChest(this.gameManager, location, location.getBlock().getData())));
+        this.arenaManager.getChestLocations().forEach(location -> this.luckyChests.add(new LuckyChest(this.gameManager, location)));
     }
 
     public void spawnAllChests() {
