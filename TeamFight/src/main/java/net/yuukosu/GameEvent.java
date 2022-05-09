@@ -202,6 +202,24 @@ public class GameEvent implements Listener {
     }
 
     @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        Block block = e.getClickedBlock();
+
+        if (block != null) {
+            if (this.gameManager.getGamePhase() == GamePhase.STARTED) {
+                if (block.getType() == Material.CHEST) {
+                    e.setCancelled(true);
+                }
+            }
+        }
+
+        if (!player.isOp()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         GamePlayer gamePlayer = this.gameManager.getGamePlayer(player);

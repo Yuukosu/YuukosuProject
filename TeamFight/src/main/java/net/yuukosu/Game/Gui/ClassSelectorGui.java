@@ -8,7 +8,6 @@ import net.yuukosu.Game.GamePlayer;
 import net.yuukosu.System.GuiCreator.GuiButton;
 import net.yuukosu.System.GuiCreator.YuukosuGui;
 import net.yuukosu.System.ItemCreator;
-import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -81,7 +80,7 @@ public class ClassSelectorGui extends YuukosuGui {
                     gamePlayer.getPlayer().sendMessage("§e次のリスポーン時に適用されます。");
                 }
 
-                player.playSound(player.getLocation(), Sound.WOOD_CLICK, 3F, 2F);
+                player.playSound(player.getLocation(), "random.wood_click", 3F, 2F);
                 return;
             }
 

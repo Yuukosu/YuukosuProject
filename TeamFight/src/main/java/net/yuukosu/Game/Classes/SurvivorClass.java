@@ -11,6 +11,6 @@ public class SurvivorClass extends ItemClass {
                 "§7説明",
         }, new ItemStack(Material.IRON_AXE));
         super.addItem(0, new ItemCreator(Material.IRON_AXE).create())
-                .addItem(2, new ItemCreator(Material.GOLDEN_APPLE).setAmount(3).create());
+                .addItem(1, new ItemCreator(Material.GOLDEN_APPLE).setAmount(3).create());
     }
 }

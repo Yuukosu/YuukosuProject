@@ -46,6 +46,10 @@ public class BlockDataEx extends BlockData {
         block.setType(Material.AIR);
     }
 
+    public Location getCenterLocation() {
+        return new Location(this.location.getWorld(), this.location.getX() + 0.5D, this.location.getY(), this.location.getZ() + 0.5D);
+    }
+
     @Override
     public Document toDocument() {
         Document doc = super.toDocument();

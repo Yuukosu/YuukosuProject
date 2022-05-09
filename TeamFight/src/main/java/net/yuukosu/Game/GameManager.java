@@ -261,10 +261,9 @@ public class GameManager {
     public void startGame() {
         this.gamePhase = GamePhase.STARTED;
         this.startGameTimer(this.gameTime2);
-        this.destroyLobby(10);
         this.luckyChestManager.init();
-        this.luckyChestManager.destroyAllChests();
-        this.luckyChestManager.spawnRandomChests(3);
+        this.startUpdateChestTimer();
+        this.destroyLobby(10);
         this.shakeTeam();
         this.giveItem();
         this.teleportTeam();
@@ -304,6 +303,29 @@ public class GameManager {
                 GameManager.this.updateFrontend(false, true);
             }
         }.runTaskTimer(TeamFight.getInstance(), 0L, 20L);
+    }
+
+    public void startUpdateChestTimer() {
+        new BukkitRunnable() {
+            boolean first = true;
+
+            @Override
+            public void run() {
+                if (GameManager.this.gamePhase != GamePhase.STARTED) {
+                    this.cancel();
+                    return;
+                }
+
+                GameManager.this.luckyChestManager.spawnRandomChests();
+
+                if (!this.first) {
+                    GameManager.this.sendMessage("§a新しい §eLucky Chest §aがスポーンしました！");
+                    GameManager.this.playSound("random.levelup", 3, 2);
+                }
+
+                this.first = false;
+            }
+        }.runTaskTimer(TeamFight.getInstance(), 0L, 20L * 180L);
     }
 
     public void judgeWinner() {

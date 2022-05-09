@@ -9,18 +9,21 @@ import net.yuukosu.System.BlockControl.ClickableBlock;
 import net.yuukosu.System.Hologram;
 import net.yuukosu.System.ItemCreator;
 import net.yuukosu.TeamFight;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Random;
+
 public class LuckyChest extends BlockDataEx implements ClickableBlock {
 
+    @Getter
+    private final LuckyChestManager chestManager;
     @Getter
     private final GameManager gameManager;
     @Getter
@@ -33,20 +36,22 @@ public class LuckyChest extends BlockDataEx implements ClickableBlock {
     private boolean opened;
 
     @SuppressWarnings("deprecation")
-    public LuckyChest(GameManager gameManager, Location location) {
+    public LuckyChest(LuckyChestManager chestManager, GameManager gameManager, Location location) {
         super(location, new BlockData(Material.CHEST, location.getBlock().getData()));
+        this.chestManager = chestManager;
         this.gameManager = gameManager;
-        this.hologram = new Hologram(location, 0.3F);
+        this.hologram = new Hologram(new Location(location.getWorld(), location.getX() + 0.5D, location.getY() - 1.0D, location.getZ() + 0.5D), 0.3F);
         this.hologram.addMessage("§e§lCLICK TO OPEN");
         this.hologram.addMessage("§bLucky Chest");
         this.displayItem = new EntityItem(((CraftWorld) location.getWorld()).getHandle());
     }
 
 
-    public LuckyChest(GameManager gameManager, Location location, byte data) {
+    public LuckyChest(LuckyChestManager chestManager, GameManager gameManager, Location location, byte data) {
         super(location, new BlockData(Material.CHEST, data));
+        this.chestManager = chestManager;
         this.gameManager = gameManager;
-        this.hologram = new Hologram(location, 0.3F);
+        this.hologram = new Hologram(new Location(location.getWorld(), location.getX() + 0.5D, location.getY() - 1.0D, location.getZ() + 0.5D), 0.3F);
         this.hologram.addMessage("§e§lCLICK TO OPEN");
         this.hologram.addMessage("§bLucky Chest");
         this.displayItem = new EntityItem(((CraftWorld) location.getWorld()).getHandle());
@@ -123,10 +128,29 @@ public class LuckyChest extends BlockDataEx implements ClickableBlock {
     @Override
     public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        this.open(new ItemCreator(Material.GOLDEN_APPLE).setDisplayName("§6ゴールデンアップル").create());
-        Bukkit.getScheduler().runTaskLater(TeamFight.getInstance(), this::destroy, 20L * 5L);
-        player.sendMessage("§aラッキーチェストを開けた！");
-        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3, 1.0F);
-        Bukkit.getScheduler().runTaskLater(TeamFight.getInstance(), () -> player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3, 1.5F), 5L);
+
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (!this.opened) {
+                LuckyChestItem item = this.chestManager.getLuckyChestItems().isEmpty() ? null : this.chestManager.getLuckyChestItems().get(new Random().nextInt(this.chestManager.getLuckyChestItems().size()));
+                this.open(item == null ? new ItemCreator(Material.BARRIER).setDisplayName("§cNone §7x9999").create() : new ItemCreator(item.getDisplayItem()).setDisplayName(item.getName()).create());
+
+                if (item != null) {
+                    player.getInventory().addItem(item.getItems());
+                    player.sendMessage("§a" + item.getName() + " §aを獲得しました！");
+                }
+
+                player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3, 1.0F);
+                Bukkit.getScheduler().runTaskLater(TeamFight.getInstance(), () -> player.playSound(player.getLocation(), Sound.ORB_PICKUP, 3, 1.5F), 5L);
+                Bukkit.getScheduler().runTaskLater(TeamFight.getInstance(), () -> {
+                    this.destroy();
+                    Location location = this.getCenterLocation();
+                    location.getWorld().playSound(location, Sound.CHICKEN_EGG_POP, 3, 1);
+                    this.gameManager.getPlayers().forEach(gamePlayer -> gamePlayer.getCorePlayer().sendPackets(new PacketPlayOutWorldParticles(EnumParticle.CLOUD, false, (float) location.getX(), (float) location.getY() + 0.5F, (float) location.getZ(), 0.5F, 0.5F, 0.5F, 0, 10)));
+                }, 20L * 5L);
+                return;
+            }
+
+            player.sendMessage("§cこのチェストはすでに開封済みです。");
+        }
     }
 }
