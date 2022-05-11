@@ -50,14 +50,13 @@ public class InviteCodeManager {
         collection.updateOne(Filters.eq("INVITE_CODES"), new Document("$set", doc), DatabaseUtils.getUpdateOptions());
     }
 
+    @SuppressWarnings("unchecked")
     public void load() {
         MongoCollection<Document> collection = YuukosuCore.getCoreDataCollection();
         Document doc = collection.find(Filters.eq("INVITE_CODES")).first();
 
         if (doc != null) {
-            @SuppressWarnings("unchecked")
-            List<Document> list = (List<Document>) doc.get("INVITE_CODES");
-            list.forEach(document -> {
+            ((List<Document>) doc.get("INVITE_CODES")).forEach(document -> {
                 InviteCode inviteCode = InviteCode.toInviteCode(document);
 
                 if (this.inviteCodes.stream().noneMatch(inviteCode::equals)) {

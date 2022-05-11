@@ -5,7 +5,6 @@ import net.yuukosu.Arena.ArenaManager;
 import net.yuukosu.Game.GameManager;
 import net.yuukosu.System.ItemCreator;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;

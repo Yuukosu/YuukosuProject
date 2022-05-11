@@ -12,11 +12,10 @@ import net.yuukosu.Game.CustomItem.ClassSelectorItem;
 import net.yuukosu.Game.GameManager;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TeamFight extends JavaPlugin {
-
-    // TODO ラッキーチェストシステムの作成
 
     @Getter
     private static TeamFight instance;
@@ -42,6 +41,7 @@ public class TeamFight extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        TeamFight.getArenaManager().getChestLocations().forEach(location -> location.getBlock().setType(Material.AIR));
         TeamFight.getGameManager().repairLobby();
     }
 

@@ -55,7 +55,7 @@ public class YuukosuCore extends JavaPlugin {
     @Override
     public void onDisable() {
         Bukkit.getWorlds().forEach(world -> world.getEntities().forEach(Entity::remove));
-        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("§cMaybee server stopped..."));
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("§cStopped Core."));
         Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
     }
 

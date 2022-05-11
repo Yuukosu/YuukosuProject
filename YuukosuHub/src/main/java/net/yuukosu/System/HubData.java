@@ -22,7 +22,7 @@ public class HubData {
         MongoCollection<Document> collection = YuukosuHub.getHubDataCollection();
         Document spawnDoc = collection.find(Filters.eq("SPAWN")).first();
 
-        if (spawnDoc != null) {
+        if (spawnDoc != null && !spawnDoc.isEmpty()) {
             this.spawn = DatabaseUtils.toLocation(spawnDoc);
         }
     }
