@@ -6,9 +6,12 @@ import io.netty.channel.ChannelPromise;
 import lombok.Getter;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayInUpdateSign;
+import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
+import net.yuukosu.System.NPC.ClickableNPC;
 import net.yuukosu.YuukosuCore;
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class PacketHandler extends ChannelDuplexHandler {
@@ -44,6 +47,24 @@ public class PacketHandler extends ChannelDuplexHandler {
                 }
 
                 return;
+            }
+        }
+
+        if (packet instanceof PacketPlayInUseEntity) {
+            PacketPlayInUseEntity useEntity = (PacketPlayInUseEntity) packet;
+            Field field = PacketPlayInUseEntity.class.getDeclaredField("a");
+            field.setAccessible(true);
+            int id = field.getInt(useEntity);
+
+            if (ClickableNPC.getClickableNpcs().containsKey(id)) {
+                ClickableNPC clickableNPC = ClickableNPC.getClickableNpcs().get(id);
+
+                if (clickableNPC.isDelaying(this.getCorePlayer().getPlayer())) {
+                    return;
+                }
+
+                clickableNPC.startDelay(this.getCorePlayer().getPlayer());
+                clickableNPC.onClick(this.corePlayer, useEntity.a());
             }
         }
 

@@ -23,6 +23,7 @@ public class YuukosuCore extends JavaPlugin {
      * TODO 招待コードシステムを作成する。 ✅
      * TODO 簡単なミニゲームを作成する。✅
      * TODO 別のサーバーへ移動する手段を作成する。
+     * TODO ClickableNPC 作成 & 修正 ✅
      */
 
     @Getter
@@ -73,7 +74,8 @@ public class YuukosuCore extends JavaPlugin {
                 new DamageCommand(),
                 new ExampleCommand(),
                 new StrikeCommand(),
-                new DeauthCommand()
+                new DeauthCommand(),
+                new MinikloonCommand()
         );
     }
 

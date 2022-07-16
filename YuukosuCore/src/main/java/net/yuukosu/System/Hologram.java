@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -22,9 +23,14 @@ public class Hologram {
     @Getter
     private final List<EntityArmorStand> armorStands = new ArrayList<>();
 
+    public Hologram(World world) {
+        this.location = new Location(world, 0, 0, 0);
+        this.space = 0.3F;
+    }
+
     public Hologram(Location location) {
         this.location = location;
-        this.space = 0.5F;
+        this.space = 0.3F;
     }
 
     public Hologram(Location location, float space) {

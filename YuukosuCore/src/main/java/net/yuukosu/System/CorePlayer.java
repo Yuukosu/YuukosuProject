@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelPipeline;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_8_R3.*;
@@ -141,7 +142,8 @@ public class CorePlayer {
     }
 
     public void registerPacketHandler(ChannelDuplexHandler channelDuplexHandler) {
-        ((CraftPlayer) this.player).getHandle().playerConnection.networkManager.channel.pipeline().addBefore("packet_handler", this.player.getName(), channelDuplexHandler);
+        ChannelPipeline pipeline = ((CraftPlayer) this.player).getHandle().playerConnection.networkManager.channel.pipeline();
+        pipeline.addBefore("packet_handler", this.player.getName(), channelDuplexHandler);
     }
 
     public void unregisterPacketHandler() {

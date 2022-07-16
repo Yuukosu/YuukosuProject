@@ -2,6 +2,7 @@ package net.yuukosu.System;
 
 import lombok.Getter;
 import net.yuukosu.System.CustomItem.CustomItem;
+import net.yuukosu.System.NPC.ClickableNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -51,6 +52,6 @@ public class CoreManager {
     }
 
     public boolean contains(Player player) {
-        return this.players.containsKey(player.getUniqueId());
+        return player != null && this.players.containsKey(player.getUniqueId());
     }
 }

@@ -1,0 +1,11 @@
+net/yuukosu/System/FrontEnd$1.class
+net/yuukosu/System/FrontEnd.class
+net/yuukosu/Commands/SetSpawnCommand.class
+net/yuukosu/Commands/FlyCommand.class
+net/yuukosu/System/HubManager.class
+net/yuukosu/System/HubData.class
+net/yuukosu/HubEvent.class
+net/yuukosu/Commands/StuckCommand.class
+net/yuukosu/System/HubPlayer.class
+net/yuukosu/Commands/GameDebugCommand.class
+net/yuukosu/YuukosuHub.class
