@@ -1,2 +1,14 @@
 # Intellij IDEA Cache Directory
 .idea
+
+# YuukosuCore
+YuukosuCore/target
+YuukosuCore/YuukosuCore.jar
+
+# YuukosuHub
+YuukosuHub/target
+YuukosuHub/YuukosuHub.jar
+
+# TeamFight
+TeamFight/target
+TeamFight/TeamFight.jar

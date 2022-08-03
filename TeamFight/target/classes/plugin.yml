@@ -1,7 +1,0 @@
-name: TeamFight
-main: net.yuukosu.TeamFight
-version: 1.0
-depend:
-  - YuukosuCore
-softdepend:
-  - YuukosuCore
