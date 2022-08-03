@@ -8,6 +8,7 @@
 - TeamFight - ゲームプラグイン
 
 ## 必須環境
+- [BungeeCord](https://ci.md-5.net/job/BungeeCord/) を導入する必要があります。
 - [MongoDB](https://www.mongodb.com/) を導入する必要があります。
 
 ## 注意事項
