@@ -18,14 +18,6 @@ import java.util.Arrays;
 
 public class YuukosuCore extends JavaPlugin {
 
-    /*
-     * TODO データベースにデータを保存するシステムを作成する。 ✅
-     * TODO 招待コードシステムを作成する。 ✅
-     * TODO 簡単なミニゲームを作成する。✅
-     * TODO 別のサーバーへ移動する手段を作成する。
-     * TODO ClickableNPC 作成 & 修正 ✅
-     */
-
     @Getter
     private static YuukosuCore instance;
     @Getter
